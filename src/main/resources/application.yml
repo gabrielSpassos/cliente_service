@@ -1,0 +1,10 @@
+server:
+  port: 9000
+  #context-path: /cliente-service/api
+
+spring:
+  application:
+    name: cliente-service
+  datasource:
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/cliente

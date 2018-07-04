@@ -1,0 +1,47 @@
+buildscript {
+	ext {
+		springBootVersion = '1.5.14.RELEASE'
+	}
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+	}
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+group = 'com.gabrielspassos.cliente'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.8
+
+repositories {
+	mavenCentral()
+}
+
+configurations {
+	cucumberRuntime {
+		extendsFrom testRuntime
+	}
+}
+
+dependencies {
+	compile('org.springframework.boot:spring-boot-starter-data-jpa')
+	compile('org.springframework.boot:spring-boot-starter-web')
+	compile('org.apache.camel:camel-spring-boot-starter:2.20.0')
+	compile('de.codecentric:spring-boot-admin-starter-client:1.5.4')
+	compile('org.modelmapper:modelmapper:0.7.7')
+	compile('io.springfox:springfox-swagger2:2.7.0')
+	compile('io.springfox:springfox-swagger-ui:2.7.0')
+	testCompile('org.springframework.boot:spring-boot-starter-test')
+	testCompile("com.github.tomakehurst:wiremock-standalone:2.14.0")
+	testCompile('io.cucumber:cucumber-java8:2.3.1')
+	testCompile('info.cukes:gherkin:2.12.2')
+	testCompile('io.cucumber:cucumber-spring:2.3.1')
+	testCompile('io.cucumber:cucumber-junit:2.3.1')
+	testCompile('org.springframework.boot:spring-boot-starter-test')
+}
