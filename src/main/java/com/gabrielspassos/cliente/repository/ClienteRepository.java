@@ -9,4 +9,5 @@ public interface ClienteRepository extends CrudRepository<ClienteEntity, Long> {
 
     ClienteEntity findById(Long id);
     List<ClienteEntity> findAll();
+    ClienteEntity save(ClienteEntity clienteEntity);
 }

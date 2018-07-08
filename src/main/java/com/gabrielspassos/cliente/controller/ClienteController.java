@@ -1,6 +1,7 @@
 package com.gabrielspassos.cliente.controller;
 
 import com.gabrielspassos.cliente.controller.dto.ClienteDto;
+import com.gabrielspassos.cliente.controller.dto.ClienteSaveDto;
 import com.gabrielspassos.cliente.entity.ClienteEntity;
 import com.gabrielspassos.cliente.error.SimpleError;
 import io.swagger.annotations.ApiOperation;
@@ -11,9 +12,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -82,14 +81,39 @@ public class ClienteController {
         null));
     }
 
+    @ApiOperation(
+            value="Save cliente",
+            response=ClienteDto.class,
+            notes="This operation return a list of clientes")
+    @ApiResponses(value= {
+            @ApiResponse(
+                    code=200,
+                    message="Return's the client saved",
+                    response=ClienteDto.class
+            )
+    })
+    @PostMapping(value = "/clientes")
+    public ResponseEntity<?> saveCliente(@RequestBody ClienteSaveDto clienteSaveDto){
+        return ok(
+                Stream.of(clienteSaveDto)
+                .map(this::convertToEntity)
+                .map(clienteEntity -> producerTemplate.requestBody(
+                        "direct:saveCliente",
+                        clienteEntity)
+                ).map(response -> convertToDto((ClienteEntity) response))
+                .findFirst()
+                .get()
+        );
+    }
+
     private Map<String, Object> createRouteHeaders(Long id){
         Map<String,Object> routeHeaders = new HashMap<>();
         routeHeaders.put("id", id);
         return routeHeaders;
     }
 
-    private ClienteEntity convertToEntity(ClienteDto clienteDto) {
-        return modelMapper.map(clienteDto, ClienteEntity.class);
+    private ClienteEntity convertToEntity(ClienteSaveDto clienteSaveDto) {
+        return modelMapper.map(clienteSaveDto, ClienteEntity.class);
     }
 
     private ClienteDto convertToDto(ClienteEntity clienteEntity){

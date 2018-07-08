@@ -17,7 +17,7 @@ public class ClienteRoute extends RouteBuilder {
     private ClienteRepository clienteRepository;
 
     @Override
-    public void configure() throws Exception {
+    public void configure() {
 
         from("direct:findClienteById")
                 .process(this::findClienteById)
@@ -27,6 +27,10 @@ public class ClienteRoute extends RouteBuilder {
         from("direct:findClientes")
                 .process(this::getClientes)
                 .end();
+
+        from("direct:saveCliente")
+                .process(this::saveCliente)
+                .end();
     }
 
     private void findClienteById(Exchange exchange) {
@@ -35,15 +39,21 @@ public class ClienteRoute extends RouteBuilder {
         exchange.getIn().setBody(clienteEntity);
     }
 
-    private void hasValidBody(Exchange exchange){
+    private void hasValidBody(Exchange exchange) {
         ClienteEntity clienteEntity = (ClienteEntity) exchange.getIn().getBody();
         if(!Optional.ofNullable(clienteEntity).isPresent()){
             throw new IllegalArgumentException("Doesn't exist a client with this id");
         }
     }
 
-    private void getClientes(Exchange exchange){
+    private void getClientes(Exchange exchange) {
         List<ClienteEntity> clientes = clienteRepository.findAll();
         exchange.getIn().setBody(clientes);
+    }
+
+    private void saveCliente(Exchange exchange) {
+        ClienteEntity clienteEntity = (ClienteEntity) exchange.getIn().getBody();
+        clienteEntity = clienteRepository.save(clienteEntity);
+        exchange.getIn().setBody(clienteEntity);
     }
 }
