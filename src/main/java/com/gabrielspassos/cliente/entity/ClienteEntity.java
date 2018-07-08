@@ -3,7 +3,7 @@ package com.gabrielspassos.cliente.entity;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-@Entity
+@Entity(name = "Cliente")
 public class ClienteEntity {
 
     @Id

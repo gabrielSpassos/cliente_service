@@ -7,4 +7,6 @@ spring:
     name: cliente-service
   datasource:
     driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/cliente
+    url: jdbc:mysql://localhost:3306/clientes
+    password: ""
+    username: root

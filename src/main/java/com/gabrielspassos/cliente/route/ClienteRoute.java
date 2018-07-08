@@ -7,6 +7,8 @@ import org.apache.camel.builder.RouteBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 public class ClienteRoute extends RouteBuilder {
 
@@ -18,6 +20,7 @@ public class ClienteRoute extends RouteBuilder {
 
         from("direct:findClienteById")
                 .process(this::findClienteById)
+                .process(this::hasValidBody)
                 .end();
     }
 
@@ -25,5 +28,12 @@ public class ClienteRoute extends RouteBuilder {
         Long id = exchange.getIn().getHeader("id", Long.class);
         ClienteEntity clienteEntity = clienteRepository.findById(id);
         exchange.getIn().setBody(clienteEntity);
+    }
+
+    private void hasValidBody(Exchange exchange){
+        ClienteEntity clienteEntity = (ClienteEntity) exchange.getIn().getBody();
+        if(!Optional.ofNullable(clienteEntity).isPresent()){
+            throw new IllegalArgumentException("Doesn't exist a client with this id");
+        }
     }
 }
