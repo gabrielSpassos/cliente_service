@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -64,6 +63,25 @@ public class ClienteController {
         return ok(clienteDto);
     }
 
+    @ApiOperation(
+            value="Get clientes",
+            response=ClienteDto.class,
+            notes="This operation return a list of clientes")
+    @ApiResponses(value= {
+            @ApiResponse(
+                    code=200,
+                    message="Return's the list of clients",
+                    response=ClienteDto.class
+            )
+    })
+    @GetMapping(value = "/clientes")
+    public ResponseEntity<?> getClientes(){
+        return ok(producerTemplate.requestBodyAndHeaders(
+        "direct:findClientes",
+                null,
+        null));
+    }
+
     private Map<String, Object> createRouteHeaders(Long id){
         Map<String,Object> routeHeaders = new HashMap<>();
         routeHeaders.put("id", id);
@@ -76,9 +94,5 @@ public class ClienteController {
 
     private ClienteDto convertToDto(ClienteEntity clienteEntity){
         return modelMapper.map(clienteEntity, ClienteDto.class);
-    }
-
-    protected <T> ResponseEntity<T> inserted(URI uri, T body) {
-        return ResponseEntity.created(uri).body(body);
     }
 }

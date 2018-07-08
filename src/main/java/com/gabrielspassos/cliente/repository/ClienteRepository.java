@@ -8,5 +8,5 @@ import java.util.List;
 public interface ClienteRepository extends CrudRepository<ClienteEntity, Long> {
 
     ClienteEntity findById(Long id);
-    List<ClienteEntity> findAllBy();
+    List<ClienteEntity> findAll();
 }

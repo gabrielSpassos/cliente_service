@@ -7,6 +7,7 @@ import org.apache.camel.builder.RouteBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -22,6 +23,10 @@ public class ClienteRoute extends RouteBuilder {
                 .process(this::findClienteById)
                 .process(this::hasValidBody)
                 .end();
+
+        from("direct:findClientes")
+                .process(this::getClientes)
+                .end();
     }
 
     private void findClienteById(Exchange exchange) {
@@ -35,5 +40,10 @@ public class ClienteRoute extends RouteBuilder {
         if(!Optional.ofNullable(clienteEntity).isPresent()){
             throw new IllegalArgumentException("Doesn't exist a client with this id");
         }
+    }
+
+    private void getClientes(Exchange exchange){
+        List<ClienteEntity> clientes = clienteRepository.findAll();
+        exchange.getIn().setBody(clientes);
     }
 }

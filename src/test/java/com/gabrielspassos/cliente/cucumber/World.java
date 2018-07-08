@@ -5,6 +5,7 @@ import com.google.common.collect.Maps;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -14,4 +15,5 @@ public class World {
     public Map<String, Object> map = Maps.newHashMap();
     public Integer status;
     public ClienteDto cliente;
+    public List<ClienteDto> clientes;
 }
