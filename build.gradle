@@ -29,6 +29,17 @@ configurations {
 	}
 }
 
+task cucumber() {
+	dependsOn assemble, compileTestJava
+	doLast {
+		javaexec {
+			main = "cucumber.api.cli.Main"
+			classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+			args = ['--plugin', 'pretty', '--glue', 'com.gabrielspassos.cliente', 'src/test/resources']
+		}
+	}
+}
+
 dependencies {
 	compile('org.springframework.boot:spring-boot-starter-data-jpa')
 	compile('org.springframework.boot:spring-boot-starter-web')
@@ -39,10 +50,10 @@ dependencies {
 	compile('io.springfox:springfox-swagger-ui:2.7.0')
 	compile('mysql:mysql-connector-java:5.1.13')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
-	testCompile("com.github.tomakehurst:wiremock-standalone:2.14.0")
 	testCompile('io.cucumber:cucumber-java8:2.3.1')
 	testCompile('info.cukes:gherkin:2.12.2')
 	testCompile('io.cucumber:cucumber-spring:2.3.1')
 	testCompile('io.cucumber:cucumber-junit:2.3.1')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
+	testCompile("com.h2database:h2:1.4.191")
 }
