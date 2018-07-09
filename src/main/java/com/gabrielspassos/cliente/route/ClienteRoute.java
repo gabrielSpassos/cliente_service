@@ -1,6 +1,5 @@
 package com.gabrielspassos.cliente.route;
 
-import com.gabrielspassos.cliente.controller.ClienteController;
 import com.gabrielspassos.cliente.entity.ClienteEntity;
 import com.gabrielspassos.cliente.repository.ClienteRepository;
 import org.apache.camel.Exchange;
@@ -13,7 +12,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Component

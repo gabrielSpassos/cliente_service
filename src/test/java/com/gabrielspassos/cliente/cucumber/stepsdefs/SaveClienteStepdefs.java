@@ -2,7 +2,6 @@ package com.gabrielspassos.cliente.cucumber.stepsdefs;
 
 import com.gabrielspassos.cliente.TestConfig;
 import com.gabrielspassos.cliente.controller.dto.ClienteDto;
-import com.gabrielspassos.cliente.controller.dto.ClienteSaveDto;
 import com.gabrielspassos.cliente.cucumber.World;
 import cucumber.api.java8.En;
 import org.springframework.beans.factory.annotation.Autowired;
