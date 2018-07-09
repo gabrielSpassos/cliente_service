@@ -30,7 +30,7 @@ public class ClienteController {
     private ProducerTemplate producerTemplate;
 
     @ApiOperation(
-            value="Get cliente by id",
+            value="Get client by id",
             response=ClienteDto.class,
             notes="This operation return the client by his id")
     @ApiResponses(value= {
@@ -63,7 +63,7 @@ public class ClienteController {
     }
 
     @ApiOperation(
-            value="Get clientes",
+            value="Get clients",
             response=ClienteDto.class,
             notes="This operation return a list of clientes")
     @ApiResponses(value= {
@@ -82,12 +82,12 @@ public class ClienteController {
     }
 
     @ApiOperation(
-            value="Save cliente",
+            value="Save client",
             response=ClienteDto.class,
-            notes="This operation return a list of clientes")
+            notes="This operation save a client")
     @ApiResponses(value= {
             @ApiResponse(
-                    code=200,
+                    code=201,
                     message="Return's the client saved",
                     response=ClienteDto.class
             )
@@ -104,6 +104,32 @@ public class ClienteController {
                 .findFirst()
                 .get()
         );
+    }
+
+    @ApiOperation(
+            value="Update client",
+            response=ClienteDto.class,
+            notes="This operation save a client")
+    @ApiResponses(value= {
+            @ApiResponse(
+                    code=200,
+                    message="Return's the client updated",
+                    response=ClienteDto.class
+            )
+    })
+    @PutMapping(value = "/clientes/{id}")
+    public ResponseEntity<?> updateCliente(@RequestBody ClienteSaveDto clienteSaveDto,
+                                           @PathVariable("id") Long id){
+        return ok(Stream.of(createRouteHeaders(id))
+                .map(headers -> producerTemplate
+                        .requestBodyAndHeaders(
+                                "direct:updateCliente",
+                                convertToEntity(clienteSaveDto),
+                                headers
+                        ))
+                .map(response -> convertToDto((ClienteEntity) response))
+                .findFirst()
+                .get());
     }
 
     private Map<String, Object> createRouteHeaders(Long id){

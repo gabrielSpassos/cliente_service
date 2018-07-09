@@ -10,11 +10,16 @@ import org.springframework.boot.context.embedded.LocalServerPort;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+
+import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
-public class SaveClienteStepdefs extends TestConfig implements En {
+public class UpdateClienteStepdefs extends TestConfig implements En {
 
     @Autowired
     private World world;
@@ -22,26 +27,25 @@ public class SaveClienteStepdefs extends TestConfig implements En {
     private String port;
     private RestTemplate restTemplate;
 
-    public SaveClienteStepdefs() {
+    public UpdateClienteStepdefs() {
 
         Before(() -> {
             restTemplate = new RestTemplate();
         });
 
-        Given("^o cliente com nome (.*)", (String name) -> {
-            world.map.put("name", name);
-        });
-
-        And("^o cliente com idade (\\d+)$", (Integer age) -> {
-            world.map.put("age", age);
-        });
-
-        When("^salvo um cliente$", () -> {
+        When("^atualizar o cliente$", () -> {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<ClienteSaveDto> entity = new HttpEntity<>(
+                    createClienteSaveDto((String) world.map.get("name"), (Integer) world.map.get("age")),
+                    headers);
             try {
                 world.status = 200;
-                world.cliente = restTemplate.postForEntity(
-                        String.format("http://localhost:%s/cliente-service/api/v1/clientes", port),
-                        createClienteSaveDto((String) world.map.get("name"), (Integer) world.map.get("age")),
+                world.cliente = restTemplate.exchange(
+                        String.format("http://localhost:%s/cliente-service/api/v1/clientes/%s", port, world.map.get("id")),
+                        HttpMethod.PUT,
+                        entity,
                         ClienteDto.class)
                         .getBody();
             } catch (HttpServerErrorException | HttpClientErrorException e) {
@@ -49,13 +53,13 @@ public class SaveClienteStepdefs extends TestConfig implements En {
             }
         });
 
-        Then("^deve retornar o cliente salvo$", () -> {
-            ClienteDto expectedCliente = createClienteDto(5L, "Maria", 20);
+        Then("^deve retornar o cliente atualizado$", () -> {
+            ClienteDto expectedCliente = createClienteDto(1L, "Gabe", 22);
 
-            assertNotNull(world.cliente);
-            assertNotNull(world.cliente.getId());
+            assertEquals(expectedCliente.getId(), world.cliente.getId());
             assertEquals(expectedCliente.getName(), world.cliente.getName());
             assertEquals(expectedCliente.getAge(), world.cliente.getAge());
         });
     }
+
 }

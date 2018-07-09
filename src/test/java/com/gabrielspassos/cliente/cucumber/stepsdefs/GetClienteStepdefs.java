@@ -1,5 +1,6 @@
 package com.gabrielspassos.cliente.cucumber.stepsdefs;
 
+import com.gabrielspassos.cliente.TestConfig;
 import com.gabrielspassos.cliente.controller.dto.ClienteDto;
 import com.gabrielspassos.cliente.cucumber.World;
 import cucumber.api.java8.En;
@@ -16,7 +17,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-public class GetClienteStepdefs extends CucumberTestsRunner implements En {
+public class GetClienteStepdefs extends TestConfig implements En {
 
     @Autowired
     private World world;
